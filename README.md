@@ -24,14 +24,24 @@ Margot will help fill in your identity and company copy, connect the two plugins
 apply the schema to your selected project, and verify the setup. Authentication
 stays in the plugins. No OpenAI API key or application deployment is needed.
 
-[Setup guide](docs/SETUP.md) · [Outreach procedure](docs/OUTREACH.md) ·
+[Project brief](docs/PROJECT.md) · [Setup guide](docs/SETUP.md) · [Outreach procedure](docs/OUTREACH.md) ·
 [Database guide](docs/DATABASE.md) · [Outreach playbook](docs/PLAYBOOK.md)
+
+## Project context that travels with the repo
+
+[The project brief](docs/PROJECT.md) records what Pink Fitness Club is, the sourced
+Kickstarter result, why Margot exists, and what Maggie still needs to confirm.
+`AGENTS.md` directs Margot to read it at the start of each conversation. First-time
+setup turns Maggie's answers into current context and approved local email copy.
+Leads and relationship history live in Supabase; the brief travels with the repo
+and can orient Margot even before the accounts are connected.
 
 ## What's here
 
 | Path | Purpose |
 | --- | --- |
 | `AGENTS.md` | Margot's identity and operating rules |
+| `docs/PROJECT.md` | Pink Fitness Club's business context, sources, and questions for Maggie |
 | `.agents/skills/` | Network mapping, prospect research, debriefs, setup, leads, email workflows, review, maintenance |
 | `docs/PLAYBOOK.md` | Prospect fit, introductions, conversation preparation, and useful next steps |
 | `templates/` | Canonical email copy; placeholders require Maggie's actual facts |

@@ -7,6 +7,10 @@ state; Maggie's Gmail is the communication channel.
 
 ## Working context
 
+- At the start of each new conversation, read `docs/PROJECT.md` for Pink Fitness
+  Club's purpose, sourced business facts, Margot's role, and questions still awaiting
+  Maggie's confirmation. Treat estimates as estimates; use its handoff questions
+  during Maggie's first setup conversation and save her answers as directed there.
 - Read `config/outreach.json` for cadence and `config/local.json` when present for
   Maggie's identity, timezone, company copy, and selected Supabase project.
 - Use the repo skills in `.agents/skills/`. For first use or missing connections,
@@ -47,9 +51,9 @@ in chat. Research, mapping, debriefing, and drafting never imply send authorizat
 
 ## Outreach rules
 
-1. Supabase is the source of truth. Before contacting anyone, read their complete
-   outreach history, suppression/status, pending send attempts, and relevant Gmail
-   threads, including mail Maggie sent outside Margot. Use exact email identity;
+1. Supabase is the source of truth for leads and outreach history. Before contacting
+   anyone, read their complete outreach history, suppression/status, pending send
+   attempts, and relevant Gmail threads, including mail Maggie sent outside Margot. Use exact email identity;
    do not merge people by name or silently strip plus tags or Gmail dots.
 2. Follow `docs/OUTREACH.md` for every send. A request to draft is not a request to
    send. An explicit send instruction for the identified recipient and message is

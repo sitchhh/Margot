@@ -1,7 +1,8 @@
 # First-time setup with Maggie
 
-Read `AGENTS.md`. The company is Pink Fitness Club; the operator is Maggie.
-Do not assume “Magnolia” is her company or signature.
+Read `AGENTS.md` and [the project brief](PROJECT.md). The company is Pink Fitness
+Club; the operator is Maggie, publicly named Magnolia Barney on Kickstarter.
+Confirm her preferred outreach name and signature.
 
 ## 1. Prepare the repo
 
@@ -9,6 +10,12 @@ Maggie needs GitHub access to this private repository. Clone
 `https://github.com/sitchhh/Margot`, open that local folder in Codex, and trust it
 after reviewing its instructions. Start a fresh chat if repo skills do not appear;
 `AGENTS.md` also routes to their files directly.
+
+Before filling in company copy, briefly recap the project brief and work through
+its unanswered handoff questions with Maggie. Confirm the current additional
+funding need; Rocky's roughly $120,000 recollection is not approved outreach copy.
+Record confirmed context and its date in the appropriate place described in the
+brief. Keep unknowns explicit and continue independent setup steps.
 
 Run `python3 scripts/margot.py init`. It creates `config/local.json` without
 overwriting an existing file. Fill in Maggie's sender address, signature, IANA

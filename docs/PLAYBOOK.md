@@ -1,7 +1,9 @@
 # Investor outreach playbook
 
 Use this guidance when Maggie asks Margot to find prospects, prepare a conversation,
-or review what happened. The repo holds reusable instructions; Supabase holds the
+or review what happened. Start from [the project brief](PROJECT.md) for the business
+story and confirmed facts; its provisional funding estimate is not an approved ask.
+The repo holds reusable instructions and business context; Supabase holds the
 actual people, sources, notes, statuses, and outreach history. Gmail is Maggie's
 mailbox. Work happens in her active Codex conversation, at her request.
 
