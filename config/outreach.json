@@ -1,0 +1,6 @@
+{
+  "first_follow_up_days": 5,
+  "second_follow_up_days": 7,
+  "time_basis": "elapsed_24_hour_days",
+  "max_standard_follow_ups": 2
+}

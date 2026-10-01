@@ -1,0 +1,40 @@
+name: Check Margot
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: margot_test
+          POSTGRES_PASSWORD: local-test-only
+          POSTGRES_DB: margot_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U margot_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Helpers
+        run: python3 -m unittest discover -s tests -v
+      - name: Isolated database
+        env:
+          PGHOST: localhost
+          PGPORT: '5432'
+          PGUSER: margot_test
+          PGPASSWORD: local-test-only
+          PGDATABASE: margot_test
+        run: |
+          psql -X -v ON_ERROR_STOP=1 -f tests/bootstrap.sql
+          for migration in supabase/migrations/*.sql; do
+            psql -X -v ON_ERROR_STOP=1 -1 -f "$migration"
+          done
+          psql -X -v ON_ERROR_STOP=1 -f tests/database.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/verify.sql
+          psql -X -v ON_ERROR_STOP=1 -f supabase/smoke.sql
