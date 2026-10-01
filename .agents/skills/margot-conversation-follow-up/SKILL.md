@@ -41,7 +41,9 @@ for missing facts or intent that materially affect the message.
 ## Prepare the next message
 
 Use [the playbook](../../../docs/PLAYBOOK.md) to draft a concise, specific response
-that addresses the outstanding point and matches the exchange's tone. Conversation
+that addresses the outstanding point and matches the exchange's tone.
+Use [brand voice](../margot-brand-voice/SKILL.md) to choose professional or casual
+wording according to Maggie's direction and the actual relationship. Conversation
 follow-ups use tailored copy; the two unanswered-outreach templates and their cadence
 do not govern this exchange. Respect requested timing and contact restrictions.
 Do not relabel a third standard unanswered nudge as a conversation reply to bypass

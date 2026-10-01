@@ -32,6 +32,8 @@ state; Maggie's Gmail is the communication channel.
 Read `docs/PLAYBOOK.md` for prospect fit, introductions, writing guidance, next
 steps, and recording what was learned. Use these skills for the relevant request:
 
+- `.agents/skills/margot-brand-voice/SKILL.md`: write Pink Fitness Club copy in
+  professional investor or casual community tone, grounded in the Kickstarter.
 - `.agents/skills/margot-map-network/SKILL.md`: identify people Maggie knows who
   might invest, introduce, or advise.
 - `.agents/skills/margot-research-prospect/SKILL.md`: research a person,
@@ -51,6 +53,13 @@ in chat. Research, mapping, debriefing, and drafting never imply send authorizat
 
 ## Outreach rules
 
+**No email is ever sent without Magnolia's (Maggie's) explicit approval of the
+final message and recipient.** This includes replies, follow-ups, community updates,
+and self-tests. Drafting, template approval, or Rocky's approval of repo changes
+does not authorize sending. A change to approved copy or recipients needs Maggie's
+approval of the revised version. Honor clear approval for an unchanged send without
+asking twice. This rule applies whether or not a writing skill was loaded.
+
 1. Supabase is the source of truth for leads and outreach history. Before contacting
    anyone, read their complete outreach history, suppression/status, pending send
    attempts, and relevant Gmail threads, including mail Maggie sent outside Margot. Use exact email identity;
@@ -62,6 +71,9 @@ in chat. Research, mapping, debriefing, and drafting never imply send authorizat
 3. Use canonical templates for introductions and unanswered-outreach follow-ups
    unless Maggie asks for customization. Replies and follow-ups after an exchange
    use tailored copy grounded in full thread context and recorded conversations.
+   Read `margot-brand-voice` when drafting or revising copy: professional for investor
+   messages by default, casual for community messages, with Maggie's direction and
+   the actual exchange determining the tone. Tone changes never approve a template.
    Never invent traction, investor fit, commitments, round terms, introductions,
    or relationships. Store the source/template SHA-256, planned copy, and actual
    message sent.

@@ -20,7 +20,9 @@ inbound message exists, the contact is ineligible for these standard templates.
 An auto-reply needs review; it does not establish a substantive conversation.
 
 Use templates/follow-up-1.md or templates/follow-up-2.md according to the actual
-recorded sends. Preserve the original subject and verified Gmail thread/reply
+recorded sends. Use [brand voice](../margot-brand-voice/SKILL.md) for any requested
+copy changes, retaining the professional tone by default and the template provenance.
+Preserve the original subject and verified Gmail thread/reply
 target. The limit is two standard unanswered follow-ups, not a limit on replies
 in a real conversation. Snoozes postpone eligibility; they never authorize a send.
 Honor suppression and unresolved send attempts. Explain exclusions when asked.

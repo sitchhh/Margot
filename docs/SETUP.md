@@ -17,6 +17,12 @@ funding need; Rocky's roughly $120,000 recollection is not approved outreach cop
 Record confirmed context and its date in the appropriate place described in the
 brief. Keep unknowns explicit and continue independent setup steps.
 
+Use [the brand voice skill](../.agents/skills/margot-brand-voice/SKILL.md) to draft
+company copy and show Maggie the professional investor and casual community
+examples. Refine them using her edits; do not treat the initial profiles or the
+Kickstarter's historical plans as approved current email copy. Reviewing tone or
+templates never authorizes sending an email.
+
 Run `python3 scripts/margot.py init`. It creates `config/local.json` without
 overwriting an existing file. Fill in Maggie's sender address, signature, IANA
 timezone, company summary, fundraising context, and call to action. Use her facts

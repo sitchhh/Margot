@@ -27,6 +27,11 @@ stays in the plugins. No OpenAI API key or application deployment is needed.
 [Project brief](docs/PROJECT.md) · [Setup guide](docs/SETUP.md) · [Outreach procedure](docs/OUTREACH.md) ·
 [Database guide](docs/DATABASE.md) · [Outreach playbook](docs/PLAYBOOK.md)
 
+[Pink Fitness Club voice](.agents/skills/margot-brand-voice/SKILL.md) provides two
+profiles: professional for prospective and current investors, and casual for
+community copy, based on Magnolia's Kickstarter story and rewards. Each includes
+writing guidance and a matching example. Magnolia can refine either by asking.
+
 ## Project context that travels with the repo
 
 [The project brief](docs/PROJECT.md) records what Pink Fitness Club is, the sourced
@@ -43,6 +48,7 @@ and can orient Margot even before the accounts are connected.
 | `AGENTS.md` | Margot's identity and operating rules |
 | `docs/PROJECT.md` | Pink Fitness Club's business context, sources, and questions for Maggie |
 | `.agents/skills/` | Network mapping, prospect research, debriefs, setup, leads, email workflows, review, maintenance |
+| `.agents/skills/margot-brand-voice/` | Professional and casual tone profiles, examples, and Kickstarter source notes |
 | `docs/PLAYBOOK.md` | Prospect fit, introductions, conversation preparation, and useful next steps |
 | `templates/` | Canonical email copy; placeholders require Maggie's actual facts |
 | `config/outreach.json` | Five days to follow-up #1, seven more to #2; editable defaults |
@@ -83,6 +89,7 @@ binaries directory. Maggie does not need local Postgres for daily plugin use.
 - “Process replies and show me anything I need to answer.”
 - “Move Alex to Maybe Later and set a next action for November.”
 - “Make the second follow-up less formal.”
+- “Draft this update in both the professional and casual voices.”
 - “Change the first follow-up delay to seven days.”
 
 The network, research, and debrief skills can help before the accounts are connected;
@@ -90,8 +97,10 @@ they distinguish proposed findings from information actually saved in Supabase.
 
 Work runs when Maggie asks in the conversation. Opening the repo starts nothing.
 Next-action dates and follow-up intervals help Maggie review what is due; they do
-not schedule work or send email. Every send needs her explicit request for that
-recipient and message in the active conversation.
+not schedule work or send email. No email is ever sent without Magnolia's explicit
+approval of the final message and recipient in the active conversation, including
+test emails and follow-ups. Approving a template, tone, or repo change is not send
+authorization. Changed copy or recipients require her approval of the revised version.
 
 There are two follow-up skills: [unanswered outreach](.agents/skills/margot-follow-up/SKILL.md)
 uses the first and second follow-up templates when there has been no inbound mail;

@@ -32,6 +32,11 @@ sending. This playbook does not choose a fundraising route or supply legal terms
 
 ## Make a useful, specific request
 
+Use [the brand voice skill](../.agents/skills/margot-brand-voice/SKILL.md) when drafting
+or revising copy. It provides professional investor and casual community profiles,
+with sourced Kickstarter observations and examples of the same message in both
+tones. Maggie's direction and the existing relationship guide the choice.
+
 Match the request to the person's role and what Maggie actually wants:
 
 | Conversation | Useful first request |

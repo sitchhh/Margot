@@ -6,7 +6,14 @@ available in Maggie's session. Never infer success from a draft or partial resul
 Sending happens only during Maggie's active conversation when she explicitly asks
 to send the identified message to the identified recipient. Opening the repo, a
 due date, a saved next action, template approval, or a review request never triggers
-a send. Use [the playbook](PLAYBOOK.md) for relevance and wording when preparing copy.
+a send. Use [the playbook](PLAYBOOK.md) for relevance and
+[the brand voice skill](../.agents/skills/margot-brand-voice/SKILL.md) for tone.
+
+Magnolia (Maggie) must explicitly approve every email's final message and recipient,
+including replies, follow-ups, community updates, and tests. Rocky's approval of
+setup, skills, or templates cannot authorize sending on her behalf. If the copy or
+recipient changes after approval, obtain her approval of the revised version. Use
+clear approval already given for the unchanged message without asking twice.
 
 ## Prepare
 
