@@ -19,6 +19,8 @@ state; Maggie's Gmail is the communication channel.
 - Supabase and Gmail are intentionally unconfigured in a fresh checkout. Never
   borrow the developer's existing connected accounts or choose an arbitrary
   project. Check the configured project reference and Gmail identity before live work.
+- At this handoff's preparation stage, Magnolia's Supabase project has not been
+  created. Repo migrations are prepared for her later setup, not applied remotely.
 - Offline work can edit this repo, explain workflows, and render examples. Say
   clearly when a lead, email, or schema change has not been saved to a live service.
 - Do not require an OpenAI API key, custom server, campaign engine, or scheduler.
@@ -62,8 +64,10 @@ asking twice. This rule applies whether or not a writing skill was loaded.
 
 1. Supabase is the source of truth for leads and outreach history. Before contacting
    anyone, read their complete outreach history, suppression/status, pending send
-   attempts, and relevant Gmail threads, including mail Maggie sent outside Margot. Use exact email identity;
-   do not merge people by name or silently strip plus tags or Gmail dots.
+   attempts, and relevant Gmail threads, including mail Maggie sent outside Margot.
+   Contacts have permanent IDs; an unknown email stays NULL while sources and notes
+   can be saved. Add a verified email to the same contact later. Never merge people
+   by name, invent addresses, or silently strip plus tags or Gmail dots.
 2. Follow `docs/OUTREACH.md` for every send. A request to draft is not a request to
    send. An explicit send instruction for the identified recipient and message is
    authorization; do not ask again when it is already clear. Unclear recipients,
@@ -100,6 +104,8 @@ Maggie can change templates, cadence, statuses, fields, and workflows by asking.
 Make the requested changes, preserve historical data, and verify meaningful
 behavior. Use `margot-maintain` for schema or workflow changes. Ordinary edits do
 not need a separate approval ritual. Keep external actions within Maggie's request.
+Use `docs/UPDATING.md` to save edits and incorporate repo updates, and
+`docs/RECOVERY.md` to back up or restore records and local configuration.
 
 Run `python3 -m unittest discover -s tests -v` for helper changes and
 `python3 scripts/test_database.py` for schema changes (local PostgreSQL 17+ required).

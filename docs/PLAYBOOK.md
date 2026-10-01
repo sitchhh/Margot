@@ -100,10 +100,12 @@ discussion's exact amount, currency, conditions, and tentative/confirmed wording
 a note when provided. Never treat completing a task or setting status to `committed`
 as evidence that funds arrived. Do not calculate money raised from these fields.
 
-Contacts currently require an email and first name; notes and sources belong to a
-contact. Never fabricate an email, contact, or table to save an incomplete hunch.
-Explain the missing information and leave the draft in the conversation, explicitly
-not saved to the CRM. Apply the same distinction while Supabase is unconnected.
+Contacts require a first name and enough context to distinguish the person; email
+is optional. Save "Jane at this firm, possible introduction through Sarah" with
+email NULL, firm/source/introducer and relevant notes. Add a verified email to the
+same contact ID later. Check possible existing records without merging on name.
+Never fabricate an email or person to save an incomplete hunch. Unresolved identity
+or unavailable Supabase means the draft remains explicitly unsaved in chat.
 Do not create a local prospect list or personal notes file as a substitute.
 
 ## Learn during reviews Maggie requests

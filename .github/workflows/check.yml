@@ -36,5 +36,15 @@ jobs:
             psql -X -v ON_ERROR_STOP=1 -1 -f "$migration"
           done
           psql -X -v ON_ERROR_STOP=1 -f tests/database.sql
+          psql -X -v ON_ERROR_STOP=1 -f tests/prospect_offline.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/verify.sql
           psql -X -v ON_ERROR_STOP=1 -f supabase/smoke.sql
+          psql -X -v ON_ERROR_STOP=1 -f tests/backup_fixture.sql
+          psql -X -v ON_ERROR_STOP=1 -At -f tests/backup_fingerprint.sql > /tmp/margot-before.txt
+          # Use the server container's matching client version for archives.
+          docker exec ${{ job.services.postgres.id }} pg_dump -U margot_test -d margot_test --schema=margot --format=custom > /tmp/margot.dump
+          createdb margot_restored
+          docker exec -i ${{ job.services.postgres.id }} pg_restore -U margot_test --dbname=margot_restored --no-owner --single-transaction --exit-on-error < /tmp/margot.dump
+          psql -X -v ON_ERROR_STOP=1 -d margot_restored -At -f tests/backup_fingerprint.sql > /tmp/margot-after.txt
+          diff /tmp/margot-before.txt /tmp/margot-after.txt
+          psql -X -v ON_ERROR_STOP=1 -d margot_restored -f tests/backup_verify.sql

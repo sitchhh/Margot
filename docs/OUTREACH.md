@@ -20,6 +20,8 @@ clear approval already given for the unchanged message without asking twice.
 1. Verify configured Gmail identity and Supabase project. Both must work before a
    send; Supabase read-only access is insufficient.
 2. Read contact/status, all messages, sources, notes, commitments, unresolved sends.
+   A prospect without an email can hold notes and sources but cannot be contacted;
+   add a verified address to their existing contact ID first.
    Search Gmail for the exact address across sent/received mail, relevant threads,
    known aliases, and all result pages. Inspect full messages. Incomplete history
    means not ready. Reconcile outside-Margot mail using `docs/DATABASE.md` first.
@@ -35,10 +37,14 @@ clear approval already given for the unchanged message without asking twice.
    personalization. Standard follow-ups need recipient_email, first_name,
    original_subject, gmail_thread_id, in_reply_to_message_id. Conversation replies
    use tailored copy and verified thread/reply target IDs, with provenance below.
+   A first email after an offline conversation uses `offline_follow_up`: record the
+   meeting/call as a note, include its ID as `offline_note_id`, and establish from
+   complete Gmail and CRM history that no previous email exists. Use a new subject
+   and omit thread/reply IDs. Incomplete access does not establish absent history.
    Never guess IDs. Inspect actual recipient, subject, body. Demo output is never
    sendable.
 5. Customized copy retains its base template hash and adds `customized: true`.
-   For freeform replies, save source text under `.local/`, hash it with SHA-256,
+   For freeform replies and offline follow-ups, save source text under `.local/`, hash it with SHA-256,
    and use that path/hash as provenance. Preserve exact planned and actual copy.
 6. Clear send authorization for this recipient/copy must exist in the conversation.
    Prior explicit authorization counts; don't ask twice. Review/draft/list requests
@@ -50,6 +56,9 @@ clear approval already given for the unchanged message without asking twice.
 Generate one operation UUID, then insert a `send_intents` row with contact_id, kind,
 envelope, authorization_note. Follow-ups include both cadence values from repo config
 and verified thread/reply target IDs. Replies include those IDs too.
+An `offline_follow_up` includes its saved conversation note ID and no thread IDs.
+It must respect agreed timing, suppression and pending sends, and cannot be used to
+bypass the two-template limit on unanswered introductions.
 
 Only the call that successfully creates a **new** intent may send. An existing
 prepared intent is potentially already sent, even if old or from this chat.
@@ -57,8 +66,10 @@ Reconcile it; finding it never authorizes a retry. For ambiguous inserts, query
 the same UUID and inspect Gmail. Don't clear the unique unresolved-intent constraint
 just to get an insert to succeed.
 
-Immediately before Gmail, re-read contact/intent and refresh the thread for a new
-reply. Use the verified reply action for follow-ups/replies; if unavailable, stop
+Immediately before Gmail, re-read contact/intent and refresh Gmail history for new
+mail. If a first offline follow-up now has email history, reconcile and revise the
+plan before sending. Use a new-message action for intro/offline_follow_up, and the
+verified reply action for follow-ups/replies; if unavailable, stop
 instead of starting an unrelated thread. The narrow gap between this check and
 Gmail cannot be atomic. Preserve and disclose any actual race outcome.
 
@@ -66,7 +77,9 @@ Invoke Gmail once. Retrieve the **sent** message, actual sender/recipient/subjec
 body, Gmail message/thread IDs, timestamp. gmail_message_id means the provider ID,
 not the RFC Message-ID header (store that separately if needed for replies).
 Call `margot.record_sent` with actual evidence. It records the message, resolves
-the intent, and changes new to active atomically. Planned copy and template hash
+the intent, and changes new to active (or needs_review for offline_follow_up)
+atomically, preserving other statuses. Offline follow-ups do not enter the standard
+unanswered-intro cadence; review the agreed next action instead. Planned copy and template hash
 remain in the intent. Record Gmail's actual body if normalized, not assumed output.
 
 Report recipient, confirmed send time, and whether logging succeeded. Do not say

@@ -40,8 +40,10 @@ For a requested save, use [the database guide](../../../docs/DATABASE.md):
   Record financial statements in notes as described in the playbook; this table
   does not track investment balances or cash receipts.
 - Preserve the introducer in `lead_sources` for new contacts Maggie asks to add,
-  using [add a lead](../margot-add-lead/SKILL.md). Incomplete new contacts remain
-  explicitly unsaved in chat, or can be mentioned in the existing contact's note.
+  using [add a lead](../margot-add-lead/SKILL.md). An identified person can be saved
+  with email NULL and a meeting note; use that note's ID for a first email after
+  the offline conversation once a verified email is available. Unresolved identities
+  remain explicitly unsaved, or can be mentioned in the existing contact's note.
 
 For milestone-based follow-up, record both the condition and any review date. A
 date passing does not establish that the condition happened or authorize a send.

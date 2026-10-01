@@ -4,7 +4,10 @@ select schemaname, tablename, rowsecurity from pg_tables
 where schemaname = 'margot' order by tablename;
 select role_name, has_schema_privilege(role_name, 'margot', 'USAGE') as schema_access
 from (values ('anon'), ('authenticated'), ('service_role')) roles(role_name);
-select p.proname, p.prosecdef as security_definer
+select p.proname, p.prosecdef as security_definer,
+  has_function_privilege('anon', p.oid, 'EXECUTE') as anon_execute,
+  has_function_privilege('authenticated', p.oid, 'EXECUTE') as authenticated_execute,
+  has_function_privilege('service_role', p.oid, 'EXECUTE') as service_role_execute
 from pg_proc p join pg_namespace n on n.oid = p.pronamespace
 where n.nspname = 'margot' order by p.proname;
 select * from pg_policies where schemaname = 'margot';

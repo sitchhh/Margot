@@ -5,7 +5,7 @@ access. No client RLS policies or Data API grants are present.
 
 | Table | Meaning |
 | --- | --- |
-| contacts | Unique normalized email, identity, status, next action, dates |
+| contacts | Permanent ID, optional unique normalized email, identity, status, next action, dates |
 | contact_statuses | Extensible labels and intro/follow-up/suppression flags |
 | lead_sources | Append-only sources, URLs, introducers |
 | notes | Append-only notes/corrections |
@@ -14,12 +14,16 @@ access. No client RLS policies or Data API grants are present.
 | messages | Append-only actual Gmail evidence |
 | events | Append-only before/after audit records |
 
+An unknown email is NULL, never an empty string or a fabricated address. Each person
+has a permanent UUID, so adding an email later preserves notes, sources and history.
+Multiple email-less people may have the same name; names are not unique keys.
 Emails are trimmed/lowercased; no plus-tag/dot collapsing or fuzzy merging. Store
 timestamptz, display in Maggie's timezone. Cadence comes from repo config via SQL
 arguments, with at most two standard follow-ups. Changes affect future eligibility,
 not historical timestamps. Any inbound history excludes a contact from standard
 unanswered-outreach suggestions; changing status back to active does not restore
-eligibility. Conversation follow-ups use tailored `reply` messages. These are
+eligibility. Conversation follow-ups use tailored `reply` messages, or
+`offline_follow_up` for the first email after an offline meeting/call. These are
 eligibility and bookkeeping rules; no query, date, or status triggers sending.
 
 ## Query recipes
@@ -38,29 +42,49 @@ select * from margot.lead_sources where contact_id = :contact_id order by captur
 select * from margot.commitments where contact_id = :contact_id order by due_at;
 ```
 
-Add a contact/source atomically. On duplicate email retain the existing identity
-and status; ask before replacing identity details. Append each source only once
-on retries. A single SQL operation can use a CTE:
+Before adding a person, check the exact supplied email and possible existing
+email-less prospects by name, firm and source. Resolve ambiguous identity with
+Maggie; don't automatically merge name matches. Use the selected contact ID for an
+existing person and append sources/notes without resetting their status.
+
+For a new prospect, generate contact/source UUIDs **once**, then save atomically.
+Pass NULL for an unknown email. Reuse the same UUIDs after an ambiguous result,
+read back and compare all supplied values; an existing ID is not permission to
+overwrite different content. A conflicting known email rolls back this transaction;
+inspect the existing contact and history before deciding which ID to use.
 
 ```sql
-with added as (
-  insert into margot.contacts(email, first_name, last_name, firm)
-  values (lower(btrim(:email)), :first_name, :last_name, :firm)
-  on conflict (email) do nothing returning id
-), target as (
-  select id from added union all
-  select id from margot.contacts where email = lower(btrim(:email))
-)
-insert into margot.lead_sources(contact_id, description, source_url, introduced_by)
-select id, :source_description, :source_url, :introduced_by from target
-where not exists (select 1 from margot.lead_sources s
-  where s.contact_id = target.id and s.description = :source_description
-    and s.source_url is not distinct from :source_url)
-returning contact_id;
+begin;
+insert into margot.contacts(id, email, first_name, last_name, firm)
+values (:contact_uuid, lower(btrim(:email)), :first_name, :last_name, :firm)
+on conflict (id) do nothing;
+insert into margot.lead_sources(id, contact_id, description, source_url, introduced_by)
+values (:source_uuid, :contact_uuid, :source_description, :source_url, :introduced_by)
+on conflict (id) do nothing;
+commit;
+select * from margot.contacts where id = :contact_uuid;
+select * from margot.lead_sources where id = :source_uuid;
 ```
 
-If a concurrent insert caused no ID to return, read the contact again and append
-the missing source; do not claim a new lead was saved without observing it.
+When Maggie later provides a verified address, check for an exact match on another
+record, then update the selected prospect. Never create a second person merely
+because an email became known. A collision needs identity review, not a silent
+merge or history deletion. An unresolved send blocks changing its reserved email.
+
+```sql
+select id, first_name, last_name, firm from margot.contacts
+where email = lower(btrim(:email));
+update margot.contacts set email = lower(btrim(:email))
+where id = :contact_uuid and email is null
+returning id, email;
+```
+
+If no row is returned, read back by ID and verify whether this is an identical retry
+or a different existing address. A requested correction of an existing address
+requires an explicit update after history/identity review. For an email-less
+prospect, sources, notes, status and next actions still work; preparing any send
+fails until the email is known. Without a connected Supabase project, all proposed
+records remain unsaved in the conversation.
 
 Due candidates (not send authorization):
 
@@ -69,7 +93,7 @@ python3 scripts/margot.py due-sql --as-of 2026-10-01T12:00:00-06:00
 ```
 
 The helper prints executable SQL with current configured delays. It excludes
-unresolved sends, inbound history, ineligible/suppressed statuses, latest imported
+email-less contacts, unresolved sends, inbound history, ineligible/suppressed statuses, latest imported
 outbound mail, and contacts with both standard follow-ups already sent.
 next_action_at may postpone eligibility. This query is not a list of all conversation
 work; also review next actions, commitments, and relevant threads when asked.
@@ -82,10 +106,24 @@ values (:operation_uuid, :contact_id, :kind, :planned_envelope::jsonb, :authoriz
 returning id, state;
 ```
 
-kind: intro, follow_up_1, follow_up_2, reply. Envelope: sender_email, recipient_email,
-subject, body_text, template_path, template_sha256. Follow-ups also require both
-configured delays, gmail_thread_id, in_reply_to_message_id; replies require the
-last two. Never send demo output. An existing UUID means reconcile, not resend.
+Envelope always includes sender_email, recipient_email, subject, body_text,
+template_path and template_sha256. Never send demo output. An existing UUID means
+reconcile, not resend.
+
+| Kind | Additional requirements |
+| --- | --- |
+| intro | Intro-eligible status, no previous email; Gmail creates a thread |
+| follow_up_1 / follow_up_2 | Due under both configured delays, verified gmail_thread_id and in_reply_to_message_id |
+| reply | Verified gmail_thread_id and in_reply_to_message_id |
+| offline_follow_up | No previous email after full Gmail/CRM checks; offline_note_id referencing this contact's saved meeting/call note; omit thread/reply IDs |
+
+For the offline path, first append a note with the conversation date, context and
+agreed next step, read it back, then use its ID in the planned envelope. The database
+checks note ownership and absence of recorded mail; Margot must also check Gmail
+and the note's actual meaning. This is tailored correspondence, not an intro-cadence
+shortcut. A successful offline send moves `new` to `needs_review`, preserves any
+other status, and never creates standard follow-up eligibility. Review the next
+action with Maggie; subsequent emails use `reply` in Gmail's actual new thread.
 
 ```sql
 select margot.record_sent(:intent_uuid, :gmail_message_id, :gmail_thread_id,
@@ -134,3 +172,6 @@ Inspect CLI help, then `supabase migration new <name>`. Test locally and deploy
 through the selected project's migration tool within Maggie's requested change.
 Preserve applied migration files; add subsequent files for changes. Record backfills
 explicitly. Never reset the live database or delete outreach history.
+
+For data/configuration recovery use [backup and recovery](RECOVERY.md). For saving
+repo edits or incorporating future changes use [the update workflow](UPDATING.md).

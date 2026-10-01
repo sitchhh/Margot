@@ -49,16 +49,28 @@ do not govern this exchange. Respect requested timing and contact restrictions.
 Do not relabel a third standard unanswered nudge as a conversation reply to bypass
 the two-follow-up limit. Explain when waiting or taking another action fits better.
 
-Preserve the verified Gmail thread, original subject, and correct reply target.
-For a requested send, use the existing `reply` kind, even when Maggie wrote last,
-and the custom-copy provenance, reservation, and evidence rules in
-[the sending procedure](../../../docs/OUTREACH.md). A meeting follow-up still needs
-a verified email thread under the current reply workflow; resolve a missing thread
-before sending rather than inventing IDs or mislabeling it as a first introduction.
+Choose the path supported by the full history:
+
+- **Existing email conversation:** preserve the verified Gmail thread, original
+  subject, and correct reply target. Use `reply`, even when Maggie wrote last.
+- **First email after an offline conversation:** if the complete Gmail search and
+  CRM history establish there has been no prior email, use `offline_follow_up`.
+  Save a dated note for this contact recording the meeting/call, what was discussed,
+  and the requested next step. Include its UUID as `offline_note_id` in the intent.
+  Use a truthful new subject and omit thread/reply IDs; Gmail supplies the new thread
+  after sending. An email-less prospect first needs a verified address added to
+  their existing contact. Follow the conversation's agreed timing and restrictions.
+
+Use the custom-copy provenance, authorization, reservation and evidence rules in
+[the sending procedure](../../../docs/OUTREACH.md) for either path. Missing access
+or incomplete search is not evidence of no prior mail. Never invent thread IDs or
+mislabel this as an introduction. This first offline follow-up does not enter the
+two-template unanswered-intro cadence; later requested correspondence uses `reply`
+in the real thread. Record and review the agreed next action.
 
 Nothing runs or sends automatically. A review, a draft, a due date, or a saved next
 action is not send authorization. Send only when Maggie explicitly requests the
 identified recipient and message in the active conversation; use clear existing
-authorization without asking twice. Refresh the thread immediately before sending;
+authorization without asking twice. Refresh Gmail history immediately before sending;
 if new mail changes the proposed response, revise it and resolve any materially
 changed recipient or copy with Maggie. Preserve suppression and unresolved intents.

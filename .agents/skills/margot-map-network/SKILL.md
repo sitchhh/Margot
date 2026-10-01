@@ -35,8 +35,10 @@ priorities and evidence guide the choice, without an arbitrary prospect score.
 
 If she asks to save contacts, use [add a lead](../margot-add-lead/SKILL.md) and the
 playbook's current CRM mapping. Preserve existing identities, statuses, and history;
-append relationship/role context to notes. Missing required details remain explicit
-unsaved drafts in chat. Don't write personal network maps into the repo.
+append relationship/role context to notes. A known person can be saved without an
+email; keep it NULL and preserve their contact ID when an address is added later.
+Unresolved identity or unavailable Supabase means an explicitly unsaved draft in
+chat. Don't write personal network maps into the repo.
 
 Finish with what was saved versus only discussed, and one useful next step. Mapping
 the network does not authorize contacting anyone or scheduling future work. A

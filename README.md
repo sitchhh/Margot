@@ -10,8 +10,9 @@ Maggie → ChatGPT Desktop / Codex → Margot repo
                                   └── Gmail plugin → Maggie's mailbox
 ```
 
-**Maggie's Gmail and Supabase are not connected. No live migration has been
-applied.** Gmail read, draft, send, and reply capabilities must be checked on her
+**Magnolia's Supabase project has not been created yet. Gmail is not connected,
+and no live migration has been applied.** Create and connect her accounts during
+handoff using the setup guide. Gmail read, draft, send, and reply capabilities must be checked on her
 actual account. Plugin availability alone does not verify those actions.
 
 ## Maggie's first session
@@ -42,7 +43,8 @@ behind their tools. Maggie completes the account sign-ins herself. Authenticatio
 stays in the plugins. No OpenAI API key or application deployment is needed.
 
 [Project brief](docs/PROJECT.md) · [Setup guide](docs/SETUP.md) · [Outreach procedure](docs/OUTREACH.md) ·
-[Database guide](docs/DATABASE.md) · [Outreach playbook](docs/PLAYBOOK.md)
+[Database guide](docs/DATABASE.md) · [Outreach playbook](docs/PLAYBOOK.md) ·
+[Backup and recovery](docs/RECOVERY.md) · [Save changes and update](docs/UPDATING.md)
 
 [Pink Fitness Club voice](.agents/skills/margot-brand-voice/SKILL.md) provides two
 profiles: professional for prospective and current investors, and casual for
@@ -100,7 +102,10 @@ binaries directory. Maggie does not need local Postgres for daily plugin use.
 - “Research this organization: why might it fit, and how could I get introduced?”
 - “Let me tell you how that meeting went; record the outcome and next step.”
 - “Add Alex as a lead; here's their email and where I met them.”
+- “Save Jane at this firm; Sarah may be able to introduce us. I don't have her email yet.”
+- “Add this email to the Jane prospect we saved earlier.”
 - “Draft an intro for Alex.”
+- “Draft a first email to Jane after yesterday's meeting; we've never emailed before.”
 - “Who needs their first follow-up?”
 - “Read my exchange with Alex and draft a follow-up about the financials they requested.”
 - “Process replies and show me anything I need to answer.”
@@ -108,6 +113,8 @@ binaries directory. Maggie does not need local Postgres for daily plugin use.
 - “Make the second follow-up less formal.”
 - “Draft this update in both the professional and casual voices.”
 - “Change the first follow-up delay to seven days.”
+- “Help me back up my records and local settings.”
+- “Save my template edits and bring in the latest repo updates.”
 
 The network, research, and debrief skills can help before the accounts are connected;
 they distinguish proposed findings from information actually saved in Supabase.
@@ -125,6 +132,10 @@ uses the first and second follow-up templates when there has been no inbound mai
 the full thread, meeting notes, and outstanding promises to prepare a tailored
 message after an exchange. Either skill sends only on Maggie's explicit instruction.
 The two-template limit applies to unanswered outreach, not to ongoing conversations.
+An identified prospect can be saved in Supabase before their email is known; add
+the address later without losing their notes. For an offline meeting with no prior
+email, Margot can prepare a first message that starts a new thread after the same
+history and authorization checks. It does not enter the standard intro cadence.
 
 ## Editing email templates
 
@@ -145,7 +156,7 @@ recipient and plain text; CC/BCC, attachments, rich HTML, and bulk sending requi
 a workflow extension. Historical Gmail evidence can still preserve these fields.
 The management connection has database-owner powers. RLS and history triggers
 protect against routine mistakes and Data API access, not an owner deliberately
-changing schema. Use a dedicated project and normal Supabase backups.
+changing schema. Use a dedicated project and the [backup procedure](docs/RECOVERY.md).
 
 Official references (connection instructions checked October 1, 2026):
 [Codex skills](https://learn.chatgpt.com/docs/build-skills),

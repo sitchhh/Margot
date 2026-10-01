@@ -42,14 +42,29 @@ def main():
                 f"-k {folder} -p 55439 -c listen_addresses=''", '-w', 'start')
             started = True
             files = [ROOT / 'tests/bootstrap.sql', *sorted((ROOT / 'supabase/migrations').glob('*.sql')),
-                     ROOT / 'tests/database.sql', ROOT / 'supabase/verify.sql', ROOT / 'supabase/smoke.sql']
+                     ROOT / 'tests/database.sql', ROOT / 'tests/prospect_offline.sql',
+                     ROOT / 'supabase/verify.sql', ROOT / 'supabase/smoke.sql']
             for file in files:
                 transaction = ['-1'] if file.parent.name == 'migrations' else []
                 output = run('psql', '-X', '-v', 'ON_ERROR_STOP=1', '-h', folder, '-p', '55439',
                              '-U', 'margot_test', '-d', 'postgres', *transaction, '-f', file)
                 print(f'PASS {file.relative_to(ROOT)}')
-                if file.name == 'database.sql':
+                if file.parent.name == 'tests':
                     print(output)
+            # Same full-schema archive/empty-target restore used by docs/RECOVERY.md.
+            connection = ['-h', folder, '-p', '55439', '-U', 'margot_test']
+            psql = ['-X', '-v', 'ON_ERROR_STOP=1', *connection]
+            run('psql', *psql, '-d', 'postgres', '-f', ROOT / 'tests/backup_fixture.sql')
+            before = run('psql', *psql, '-d', 'postgres', '-At', '-f', ROOT / 'tests/backup_fingerprint.sql')
+            archive = folder / 'margot.dump'
+            run('pg_dump', *connection, '-d', 'postgres', '--schema=margot', '--format=custom', '--file', archive)
+            run('createdb', *connection, 'margot_restored')
+            run('pg_restore', *connection, '-d', 'margot_restored', '--no-owner', '--single-transaction', '--exit-on-error', archive)
+            after = run('psql', *psql, '-d', 'margot_restored', '-At', '-f', ROOT / 'tests/backup_fingerprint.sql')
+            if before != after:
+                raise RuntimeError('Backup/restore changed rows, history or sequence state')
+            print(run('psql', *psql, '-d', 'margot_restored', '-f', ROOT / 'tests/backup_verify.sql'))
+            print('PASS: all eight tables and audit sequence survived full backup/restore unchanged')
         finally:
             if started:
                 run('pg_ctl', '-D', data, '-m', 'immediate', '-w', 'stop')

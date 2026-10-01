@@ -6,6 +6,8 @@ description: Change Margot's templates, cadence, contact fields, statuses, instr
 Make the smallest complete change in this repo. Templates live in templates/;
 cadence in config/outreach.json; company/sender copy in ignored config/local.json.
 Read [database evolution guidance](../../../docs/DATABASE.md) for schema/status work.
+Use [saving and updating](../../../docs/UPDATING.md) for Git changes and
+[backup and recovery](../../../docs/RECOVERY.md) before a requested restore.
 New statuses default to excluding standard unanswered follow-up suggestions.
 Preserve historical message copy, provenance, and timestamps when changing future behavior.
 

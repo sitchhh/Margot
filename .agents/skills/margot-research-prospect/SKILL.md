@@ -36,7 +36,9 @@ Research results are candidates for Maggie's review, not send-ready recipients.
 If she also asks to save a specific candidate, use
 [add a lead](../margot-add-lead/SKILL.md), preserving sources and appending the fit,
 unknowns, relationship evidence, and review context as notes. Follow the playbook's
-current schema limits; don't invent a lead queue, research table, or email address.
+current schema: save an identified person without a known email using NULL, then
+add the verified email to that same contact later. An organization alone needs an
+identified person before becoming a contact; don't invent a person, table or address.
 For an existing contact, preserve prior rejection, suppression, and history.
 
 End with the supported recommendation, what remains unknown, and whether anything

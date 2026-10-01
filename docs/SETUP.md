@@ -132,7 +132,7 @@ supports preparation but is not send-ready. Manual sending requires Maggie's
 participation and subsequent Gmail evidence reconciliation. Do not build custom
 OAuth or silently switch accounts.
 
-## 5. Apply the repository migration
+## 5. Apply the repository migrations
 
 When Maggie requests setup on the selected project, inspect existing tables and
 migration history first. If `margot` exists, compare it with recorded migrations;
@@ -144,7 +144,9 @@ descriptive name. This records live migration history. If a call times out, insp
 history/schema before retrying. Never use database reset on the live project.
 
 The initial migration creates only the `margot` schema and lookup values, no contact
-seed data. Keep it out of the Data API exposed schemas.
+seed data. The next migration supports prospects without emails and first emails
+after offline conversations. Apply every pending file in order. Keep the private
+schema out of the Data API exposed schemas.
 
 Run `supabase/verify.sql` with the SQL tool. All eight tables should have RLS,
 client schema privileges must be false, client policies absent, and functions
@@ -153,7 +155,9 @@ and performance advisors; review findings in context.
 
 Run `supabase/smoke.sql` for a transactional write/read check that rolls back its
 fictional contact. Save project reference, migration name, role, date, and observed
-results in `.local/connection-check.md`. Never store tokens in this file.
+results in `.local/connection-check.md`. Include local filenames and their actual
+remote migration versions/names so later recovery can reconcile them. Never store
+tokens in this file.
 
 ## 6. Start working
 
@@ -164,6 +168,9 @@ reservation → Gmail send → retrieve evidence → record confirmation.
 If Gmail succeeds but database recording fails, leave the intent unresolved and
 reconcile that existing message when access returns. Do not send another copy.
 A fresh checkout can repeat verification; the CRM remains in Supabase.
+Choose a manual backup routine using [backup and recovery](RECOVERY.md). Use
+[the update workflow](UPDATING.md) to preserve Maggie's template/instruction edits
+while receiving shared changes. Neither procedure starts background work.
 
 Official references (connection instructions checked October 1, 2026):
 [Repo skills](https://learn.chatgpt.com/docs/build-skills),
