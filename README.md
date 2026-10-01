@@ -20,8 +20,25 @@ actual account. Plugin availability alone does not verify those actions.
 2. Open the `Margot` folder as a local Codex project in ChatGPT Desktop.
 3. Say: **“Margot, walk me through first-time setup using docs/SETUP.md.”**
 
-Margot will help fill in your identity and company copy, connect the two plugins,
-apply the schema to your selected project, and verify the setup. Authentication
+You can start that conversation before creating or connecting any accounts.
+Margot will walk you through these steps in order:
+
+1. **Create your Supabase account and project.** Sign up at
+   [Supabase](https://supabase.com/dashboard), create an organization if prompted,
+   and create a dedicated project for Margot. This is where your contacts and
+   outreach history will live.
+2. **Connect Supabase.** Open **Plugins** in ChatGPT Desktop, find and install
+   **Supabase**, then complete its sign-in flow with your account. Select your
+   Margot project and let Margot verify the connection.
+3. **Connect Gmail.** Install **Gmail** from **Plugins**, sign in with the Google
+   account you use for investor outreach, and review the requested permissions.
+   Start a new chat in the Margot project after installing the plugins and say,
+   **“Margot, continue first-time setup using docs/SETUP.md.”**
+4. **Finish setup together.** Fill in your identity and company copy, review the
+   templates, initialize the database, and check the available Gmail actions.
+
+We call these **plugins** in the instructions; MCP is the connection technology
+behind their tools. Maggie completes the account sign-ins herself. Authentication
 stays in the plugins. No OpenAI API key or application deployment is needed.
 
 [Project brief](docs/PROJECT.md) · [Setup guide](docs/SETUP.md) · [Outreach procedure](docs/OUTREACH.md) ·
@@ -130,8 +147,8 @@ The management connection has database-owner powers. RLS and history triggers
 protect against routine mistakes and Data API access, not an owner deliberately
 changing schema. Use a dedicated project and normal Supabase backups.
 
-References checked September 30, 2026:
+Official references (connection instructions checked October 1, 2026):
 [Codex skills](https://learn.chatgpt.com/docs/build-skills),
-[OpenAI plugins](https://developers.openai.com/plugins/quickstart),
+[OpenAI plugins](https://learn.chatgpt.com/docs/plugins),
 [Supabase MCP](https://supabase.com/docs/guides/ai-tools/mcp).
 Account-specific access remains a first-session check.
